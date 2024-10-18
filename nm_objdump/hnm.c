@@ -22,7 +22,7 @@ void read_elf(const char *filename) {
     Elf64_Shdr *shdrs;
     char *strtab = NULL;
     int i;
-	size_t j;
+    size_t j;  // Declare j here
 
     fd = open(filename, O_RDONLY);
     if (fd < 0) {
@@ -61,7 +61,8 @@ void read_elf(const char *filename) {
             lseek(fd, shdrs[i].sh_offset, SEEK_SET);
             read(fd, syms, shdrs[i].sh_size);
 
-            for (size_t j = 0; j < shdrs[i].sh_size / sizeof(Elf64_Sym); j++) {
+            // Declare j outside the loop
+            for (j = 0; j < shdrs[i].sh_size / sizeof(Elf64_Sym); j++) {
                 print_symbol(&syms[j], strtab);
             }
             free(syms);
@@ -75,7 +76,7 @@ void read_elf(const char *filename) {
 
 int main(int argc, char *argv[]) {
     int i;
-    
+
     if (argc < 2) {
         fprintf(stderr, "Usage: %s [objfile ...]\n", argv[0]);
         return EXIT_FAILURE;
