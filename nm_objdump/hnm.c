@@ -22,7 +22,7 @@ void read_elf(const char *filename) {
     Elf64_Shdr *shdrs;
     char *strtab = NULL;
     int i;
-    size_t j;  // Declare j here
+    size_t j;
 
     fd = open(filename, O_RDONLY);
     if (fd < 0) {
