@@ -38,6 +38,12 @@ void read_elf(const char *filename) {
         return;
     }
 
+    if (memcmp(ehdr.e_ident, ELFMAG, SELFMAG) !0) {
+        fprintf(stderr, "Not a valid ELF file\n")
+        close(fd);
+        return;
+    }
+
     shdrs = malloc(ehdr.e_shnum * sizeof(Elf64_Shdr));
     if (shdrs == NULL) {
         perror("malloc");
@@ -69,7 +75,13 @@ void read_elf(const char *filename) {
                 return;
             }
             lseek(fd, shdrs[i].sh_offset, SEEK_SET);
-            read(fd, strtab, shdrs[i].sh_size);
+            if (read(fd, strtab, shdrs[i].sh_size) != shdrs[i].sh_size) {
+                perror("read");
+                free(strtab);
+                free(shdrs);
+                close(fd);
+                return;
+            }
             break;
         }
     }
@@ -86,7 +98,13 @@ void read_elf(const char *filename) {
             }
 
             lseek(fd, shdrs[i].sh_offset, SEEK_SET);
-            read(fd, syms, shdrs[i].sh_size);
+            if (read(fd, syms, shdrs[i].sh_size) != shdrs[i].sh_size) {
+                free(syms);
+                free(shdrs);
+                free(strtab);
+                close(fd);
+                return;
+            };
 
             for (j = 0; j < shdrs[i].sh_size / sizeof(Elf64_Sym); j++) {
                 print_symbol(&syms[j], strtab);
