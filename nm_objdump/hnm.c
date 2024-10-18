@@ -11,7 +11,6 @@ void print_symbol(Elf64_Sym *sym, char *strtab) {
         case STT_FUNC:     type = 'T'; break;
         case STT_OBJECT:   type = 'D'; break;
         case STT_NOTYPE:   type = ' '; break;
-        case STT_GNU_UNDEFINED: type = 'U'; break;
         default:           type = '?'; break;
     }
 
@@ -53,7 +52,7 @@ void read_elf(const char *filename) {
         return;
     }
 
-    if (read(fd, shdrs, ehdr.e_shnum * sizeof(Elf64_Shdr)) != ehdr.e_shnum * sizeof(Elf64_Shdr)) {
+    if (read(fd, shdrs, ehdr.e_shnum * sizeof(Elf64_Shdr)) != (ssize_t)(ehdr.e_shnum * sizeof(Elf64_Shdr))) {
         perror("read");
         free(shdrs);
         close(fd);
