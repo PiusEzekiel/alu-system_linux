@@ -61,8 +61,7 @@ void read_elf(const char *filename) {
             lseek(fd, shdrs[i].sh_offset, SEEK_SET);
             read(fd, syms, shdrs[i].sh_size);
 
-            // Declare j outside the loop
-            for (j = 0; j < shdrs[i].sh_size / sizeof(Elf64_Sym); j++) {
+		for (j = 0; j < shdrs[i].sh_size / sizeof(Elf64_Sym); j++) {
                 print_symbol(&syms[j], strtab);
             }
             free(syms);
