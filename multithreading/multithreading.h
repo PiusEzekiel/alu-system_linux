@@ -1,4 +1,4 @@
-fndef MULTITHREADING_H
+#ifndef MULTITHREADING_H
 #define MULTITHREADING_H
 #include <pthread.h> /* pthread_t, pthread_create, pthread_join */
 #include <stdint.h> /* uint32_t */
